@@ -1,0 +1,15 @@
+Source: salt-formula-etcd
+Maintainer: tcpcloud <cloud@tcpcloud.eu>
+Section: admin
+Priority: optional
+Build-Depends: debhelper (>= 9), salt-master, python, python-yaml
+Standards-Version: 3.9.6
+Homepage: http://www.tcpcloud.eu
+Vcs-Browser: https://github.com/tcpcloud/salt-formula-etcd
+Vcs-Git: https://github.com/tcpcloud/salt-formula-etcd.git
+
+Package: salt-formula-etcd
+Architecture: all
+Depends: ${misc:Depends}, salt-master, reclass
+Description: etcd salt formula
+ Install and configure etcd system.

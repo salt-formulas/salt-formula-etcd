@@ -56,7 +56,7 @@ ETCD proxy
         enabled: true
         bind:
           host: 10.0.175.101
-        proxy: on
+        proxy: true
         members:
         - host: 10.0.175.101
           name: etcd01

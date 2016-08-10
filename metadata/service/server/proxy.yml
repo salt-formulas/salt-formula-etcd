@@ -1,0 +1,18 @@
+applications:
+- etcd
+classes:
+- service.etcd.support
+parameters:
+  etcd:
+    server:
+      enabled: true
+      bind:
+        host: ${_param:host_address}
+      proxy: true
+      members:
+        - host: ${_param:cluster_node01_address}
+          name: ${_param:cluster_node01_hostname}
+        - host: ${_param:cluster_node02_address}
+          name: ${_param:cluster_node02_hostname}          
+        - host: ${_param:cluster_node03_address}
+          name: ${_param:cluster_node03_hostname}

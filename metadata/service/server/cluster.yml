@@ -1,0 +1,21 @@
+applications:
+- etcd
+classes:
+- service.etcd.support
+parameters:
+  etcd:
+    server:
+      enabled: true
+      bind:
+        host: ${_param:host_address}
+      token: ${_param:etcd_initial_token}
+      members:
+        - host: ${_param:cluster_node01_address}
+          name: ${_param:cluster_node01_hostname}
+          port: ${_param:cluster_node01_port}
+        - host: ${_param:cluster_node02_address}
+          name: ${_param:cluster_node02_hostname}
+          port: ${_param:cluster_node02_port}
+        - host: ${_param:cluster_node03_address}
+          name: ${_param:cluster_node03_hostname}
+          port: ${_param:cluster_node03_port}
