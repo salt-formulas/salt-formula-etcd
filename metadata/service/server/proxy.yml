@@ -13,6 +13,6 @@ parameters:
         - host: ${_param:cluster_node01_address}
           name: ${_param:cluster_node01_hostname}
         - host: ${_param:cluster_node02_address}
-          name: ${_param:cluster_node02_hostname}          
+          name: ${_param:cluster_node02_hostname}
         - host: ${_param:cluster_node03_address}
           name: ${_param:cluster_node03_hostname}

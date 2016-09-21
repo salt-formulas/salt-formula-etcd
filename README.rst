@@ -65,6 +65,15 @@ ETCD proxy
         - host: 10.0.175.103
           name: etcd03
 
+run ETCD on k8s
+---------------
+
+.. code-block:: yaml
+
+    etcd:
+      server:
+        engine: kubernetes
+
 Read more
 =========
 
