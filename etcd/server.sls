@@ -30,19 +30,20 @@ etcd_service:
 
 {%- else %}
 
-/etc/default/etcd:
+etcd_config:
   file.managed:
+    - name: {{ server.config }}
     - source: salt://etcd/files/default
     - template: jinja
     - require:
       - pkg: etcd_packages
 
-etcd_service:
+etcd:
   service.running:
-  - name: etcd
   - enable: True
+  - name: {{ server.services }}
   - watch:
-    - file: /etc/default/etcd
+    - file: etcd_config
 
 {%- endif %}
 
