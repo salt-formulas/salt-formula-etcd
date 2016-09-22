@@ -1,11 +1,10 @@
 {% set server = salt['grains.filter_by']({
     'Debian': {
         'pkgs': ['etcd', 'python-etcd'],
-        'services': ['etcd'],
-        'config': '/etc/files/default'
+        'services': ['etcd']
     },
     'RedHat': {
         'pkgs': [],
         'services': []
     },
-}, merge=salt['pillar.get']('server')) %}
+}, merge=salt['pillar.get']('etcd:server')) %}
