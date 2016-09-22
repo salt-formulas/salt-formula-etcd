@@ -2,7 +2,7 @@
 ## etcd(1) daemon options
 ## See "/usr/share/doc/etcd/Documentation/configuration.md.gz".
 
-{%- if {{ server.get('proxy', 'false') }} %}
+{%- if server.get('proxy', 'false') %}
 
 ### Proxy Flags
 
@@ -268,3 +268,4 @@ ETCD_ADVERTISE_CLIENT_URLS="http://{{ server.bind.host }}:4001"
 
 #### Daemon parameters:
 # DAEMON_ARGS=""
+{% endif %}
