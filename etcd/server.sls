@@ -4,6 +4,10 @@
 etcd_packages:
   pkg.installed:
   - names: {{ server.pkgs }}
+{%- if server.get('engine', 'systemd') %}
+  - require:
+    - file: /etc/default/etcd
+{%- endif %}
 
 {%- if server.get('engine', 'systemd') == 'kubernetes' %}
 
@@ -30,20 +34,17 @@ etcd_service:
 
 {%- else %}
 
-etcd_config:
+/etc/default/etcd:
   file.managed:
-    - name: {{ server.config }}
     - source: salt://etcd/files/default
     - template: jinja
-    - require:
-      - pkg: etcd_packages
 
 etcd:
   service.running:
   - enable: True
   - name: {{ server.services }}
   - watch:
-    - file: etcd_config
+    - file: /etc/default/etcd
 
 {%- endif %}
 

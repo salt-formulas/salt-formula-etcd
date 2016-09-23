@@ -7,7 +7,7 @@ parameters:
     server:
       enabled: true
       bind:
-        host: ${_param:host_address}
+        host: ${_param:cluster_local_address}
       token: ${_param:etcd_initial_token}
       members:
         - host: ${_param:cluster_node01_address}

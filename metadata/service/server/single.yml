@@ -7,7 +7,7 @@ parameters:
     server:
       enabled: true
       bind:
-        host: ${_param:host_address}
+        host: ${_param:single_address}
       token: ${_param:etcd_initial_token}
       members:
         - host: ${_param:node_address}
