@@ -39,9 +39,7 @@ etcd_service:
   - require_in:
     - pkg: etcd_packages
 
-{%- endif %}
-
-etcd:
+etcd_service:
   service.running:
   - enable: True
   - name: {{ server.services }}
