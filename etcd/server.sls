@@ -42,7 +42,7 @@ etcd_service:
 etcd_service:
   service.running:
   - enable: True
-  - name: {{ server.services }}
+  - name: {{ server.service }}
   - watch:
     - file: /etc/default/etcd
   - require:

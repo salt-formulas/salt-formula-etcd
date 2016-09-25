@@ -2,7 +2,7 @@
 {%- set server = salt['grains.filter_by']({
     'Debian': {
         'pkgs': ['etcd', 'python-etcd'],
-        'services': ['etcd'],
+        'service': etcd,
         'proxy': False,
         'engine': 'systemd'
     },
