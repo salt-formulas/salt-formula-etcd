@@ -73,6 +73,7 @@ run ETCD on k8s
     etcd:
       server:
         engine: kubernetes
+        image: etcd:latest
 
 Read more
 =========
