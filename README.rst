@@ -1,9 +1,14 @@
 
 ==================================
-ETCD Formula
+etcd Formula
 ==================================
 
 Service etcd description
+
+Possible `source.engine`:
+
+- **pkg** - install etcd package (default)
+- **docker_hybrid** - copy binaries from docker image (specified in `server.image`)
 
 Sample pillars
 ==============
@@ -66,7 +71,7 @@ Cluster etcd service
           name: etcd03
           port: 4001
 
-ETCD proxy
+etcd proxy
 -------------
 
 .. code-block:: yaml
@@ -85,7 +90,7 @@ ETCD proxy
         - host: 10.0.175.103
           name: etcd03
 
-run ETCD on k8s
+Run etcd on k8s
 ---------------
 
 .. code-block:: yaml
@@ -94,10 +99,19 @@ run ETCD on k8s
       server:
         engine: kubernetes
 
+Copy etcd binary from container
+---------------
+
+.. code-block:: yaml
+
+    etcd:
+      server:
+        image: quay.io/coreos/etcd:latest
+
 Read more
 =========
 
-* links
+* https://github.com/coreos/etcd
 
 Documentation and Bugs
 ======================

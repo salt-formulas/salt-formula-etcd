@@ -11,7 +11,7 @@
 "containers":[
     {
     "name": "etcd-container",
-    "image": "{{ server.registry }}/etcd:{{ server.version }}",
+    "image": "{{ server.get('image', 'quay.io/coreos/etcd:latest') }}",
     "resources": {
       "requests": {
         "cpu": "200m"      }
@@ -33,7 +33,7 @@
     "ports":[
       { "name": "serverport",
         "containerPort": 2380,
-        "hostPort": 2380 
+        "hostPort": 2380
       },{
        "name": "clientport",
         "containerPort": 4001,
