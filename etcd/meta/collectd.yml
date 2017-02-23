@@ -1,0 +1,6 @@
+local_plugin:
+  collectd_http_check:
+    url:
+      etcd:
+        expected_code: 200
+        url: http://127.0.0.1:{{ pillar.etcd.server.get('port', '4001') }}/health

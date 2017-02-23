@@ -2,9 +2,9 @@ parameters:
   etcd:
     _support:
       collectd:
-        enabled: false
+        enabled: true
       heka:
-        enabled: false
+        enabled: true
       sensu:
         enabled: false
       sphinx:
