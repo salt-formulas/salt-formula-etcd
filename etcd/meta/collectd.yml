@@ -4,3 +4,7 @@ local_plugin:
       etcd:
         expected_code: 200
         url: http://127.0.0.1:{{ pillar.etcd.server.get('port', '4001') }}/health
+  collectd_processes:
+    process:
+      etcd:
+        match: etcd$
