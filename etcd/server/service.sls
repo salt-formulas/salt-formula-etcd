@@ -39,6 +39,18 @@ etcd_service:
     - source: salt://etcd/files/default
     - template: jinja
 
+/var/lib/etcd/:
+  file.directory:
+    - user: etcd
+    - group: etcd
+
+/var/lib/etcd/configenv:
+  file.managed:
+    - source: salt://etcd/files/configenv
+    - template: jinja
+    - require:
+      - file: /var/lib/etcd/
+
 etcd:
   service.running:
   - enable: True

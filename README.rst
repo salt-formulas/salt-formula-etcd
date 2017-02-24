@@ -8,6 +8,26 @@ Service etcd description
 Sample pillars
 ==============
 
+Certificates
+-------------
+
+Use certificate authentication (for peers and clients). Certificates must be prepared in advance.
+
+.. code-block:: yaml
+
+    etcd:
+      server:
+        enabled: true
+        ssl:
+          enabled: true
+        bind:
+          host: 10.0.175.101
+        token: $(uuidgen)
+        members:
+        - host: 10.0.175.101
+          name: etcd01
+          port: 4001
+
 Single etcd service
 ---------------------
 
