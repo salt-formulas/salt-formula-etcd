@@ -108,7 +108,7 @@ ETCD_LISTEN_PEER_URLS="http{% if server.get('ssl', {}).get('enabled') %}s{% endi
 ## invalid example: "http://example.com:2379" (domain name is invalid for binding)
 ## default: "http://localhost:2379,http://localhost:4001"
 # ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://localhost:4001"
-ETCD_LISTEN_CLIENT_URLS="{%- if server.bind.host != '127.0.0.1' %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ server.bind.host }}:4001,{% endif %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://127.0.0.1:4001"
+ETCD_LISTEN_CLIENT_URLS="{%- if server.bind.host != '127.0.0.1' %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ server.bind.host }}:4001,{% endif %}http://127.0.0.1:4001"
 ##### -max-snapshots
 ## Maximum number of snapshot files to retain (0 is unlimited)
 ## default: 5
