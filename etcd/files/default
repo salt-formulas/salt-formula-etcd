@@ -156,7 +156,7 @@ ETCD_INITIAL_CLUSTER="{% for member in server.members %}{{ member.name }}={%- if
 ## value is set, etcd will attempt to start but fail safely.
 ## default: "new"
 # ETCD_INITIAL_CLUSTER_STATE="existing"
-ETCD_INITIAL_CLUSTER_STATE="new"
+ETCD_INITIAL_CLUSTER_STATE="{{ initial_cluster_state }}"
 
 ##### -initial-cluster-token
 ## Initial cluster token for the etcd cluster during bootstrap.

@@ -38,6 +38,12 @@ etcd_service:
   file.managed:
     - source: salt://etcd/files/default
     - template: jinja
+    - defaults:
+{%- if salt['cmd.run']('. /var/lib/etcd/configenv; etcdctl cluster-health > /dev/null 2>&1; echo $?') != '0' %}
+        initial_cluster_state: new
+{%- else %}
+        initial_cluster_state: existing
+{%- endif %}
 
 /var/lib/etcd/:
   file.directory:
