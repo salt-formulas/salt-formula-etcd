@@ -16,6 +16,15 @@ etcd_packages:
 
 {% elif server.get('source', {}).get('engine') == 'docker_hybrid' %}
 
+etcd_support_packages:
+  pkg.installed:
+    - pkgs:
+{%- for pkg in server.pkgs %}
+{%- if pkg != 'etcd' %}
+      - {{ pkg }}
+{%- endif %}
+{%- endfor %}
+
 user_etcd:
   user.present:
     - name: etcd
