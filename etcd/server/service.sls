@@ -25,13 +25,6 @@ etcd_support_packages:
 {%- endif %}
 {%- endfor %}
 
-user_etcd:
-  user.present:
-    - name: etcd
-    - shell: /bin/false
-    - home: /var/lib/etcd
-    - gid_from_name: True
-
 /tmp/etcd:
   file.directory:
       - user: root
