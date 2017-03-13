@@ -4,7 +4,7 @@ metric_collector:
       description: 'Etcd server is locally down'
       severity: down
       rules:
-      - metric: http_check
+      - metric: etcd_service_health
         field:
           service: etcd
         relational_operator: '=='
