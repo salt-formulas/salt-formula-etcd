@@ -7,4 +7,13 @@
         'pkgs': [],
         'services': []
     },
-}, merge=salt['pillar.get']('etcd:server')) %}
+}, merge=salt['grains.filter_by']({
+    'trusty': {
+        'pkgs': ['etcd'],
+        'services': ['etcd']
+    },
+    'xenial': {
+        'pkgs': ['etcd', 'python-etcd'],
+        'services': ['etcd']
+    },
+}, grain='oscodename', merge=salt['pillar.get']('etcd:server'))) %}
