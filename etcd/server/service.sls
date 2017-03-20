@@ -25,6 +25,13 @@ etcd_support_packages:
 {%- endif %}
 {%- endfor %}
 
+user_etcd:
+  user.present:
+    - name: etcd
+    - shell: /bin/false
+    - home: /var/lib/etcd
+    - gid_from_name: True
+
 /tmp/etcd:
   file.directory:
       - user: root
@@ -74,7 +81,7 @@ etcd_service:
 
 /var/log/etcd.log:
   file.managed:
-  - user: root
+  - user: etcd
   - group: root
   - mode: 644
 
@@ -106,11 +113,14 @@ etcd_service:
 /var/lib/etcd/:
   file.directory:
     - user: etcd
+    - recurse:
+      - user
 
 /var/lib/etcd/configenv:
   file.managed:
     - source: salt://etcd/files/configenv
     - template: jinja
+    - user: etcd
     - require:
       - file: /var/lib/etcd/
 
