@@ -11,4 +11,4 @@ local_plugin:
   collectd_processes:
     process:
       etcd:
-        match: etcd$
+        match: bin/etcd
