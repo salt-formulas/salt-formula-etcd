@@ -1,6 +1,8 @@
 parameters:
   etcd:
     _support:
+      prometheus:
+        enabled: true
       collectd:
         enabled: true
       heka:
