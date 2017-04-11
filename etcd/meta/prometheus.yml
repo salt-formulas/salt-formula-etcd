@@ -11,4 +11,20 @@ server:
       annotations:
         summary: 'High number of HTTP requests are failing on etcd'
         description: '{{ $value }}% of requests for {{ $labels.method }} failed on etcd instance {{ $labels.instance }}'
+    EtcdServerHasLeader:
+      if: 'etcd_server_has_leader != 1'
+      labels:
+        severity: warning
+        service: etcd
+      annotations:
+        summary: 'Etcd instance lost leader'
+        description: 'Etcd {{ $labels.instance }} lost his leader'
+    EtcdClusterSmall:
+      if: 'count(up{job="etcd"} == 0) > count(up{job="etcd"}) / 2 - 1'
+      labels:
+        severity: warning
+        service: etcd
+      annotations:
+        summary: 'Etcd cluster small'
+        description: 'If one more etcd peer goes down the cluster will be unavailable'
 {% endraw %}
