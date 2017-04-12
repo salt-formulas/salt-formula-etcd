@@ -1,18 +1,5 @@
 {%- from "etcd/map.jinja" import server with context %}
-{% from "linux/map.jinja" import system with context %}
-
 {%- if server.enabled %}
-
-{%- if grains.get('oscodename', 'trusty') %}
-
-linux_packages:
-  pkg.installed:
-    - pkgs: {{ system.pkgs }}
-
-include:
-  - linux.system.repo
-
-{%- endif %}
 
 {%- if server.get('source', {}).get('engine', 'pkg') == 'pkg' %}
 
@@ -22,10 +9,8 @@ etcd_packages:
 {%- if server.get('engine', 'systemd') %}
   - require:
     - file: /etc/default/etcd
-  {% if not grains.get('noservices', False) %}
   - watch_in:
     - service: etcd
-  {% endif %}
 {%- endif %}
 
 
@@ -73,10 +58,8 @@ copy-etcd-binaries:
     - group: root
     - require:
       - dockerng: copy-etcd-binaries
-    {% if not grains.get('noservices', False) %}
     - watch_in:
       - service: etcd
-    {% endif %}
 
 {% endfor %}
 
@@ -124,10 +107,8 @@ etcd_service:
 {%- else %}
         initial_cluster_state: existing
 {%- endif %}
-    {% if not grains.get('noservices', False) %}
     - watch_in:
       - service: etcd
-    {% endif %}
 
 /var/lib/etcd/:
   file.directory:
@@ -143,14 +124,10 @@ etcd_service:
     - require:
       - file: /var/lib/etcd/
 
-{% if not grains.get('noservices', False) %}
-
 etcd:
   service.running:
   - enable: True
   - name: {{ server.services }}
-
-{% endif %}
 
 {%- endif %}
 
