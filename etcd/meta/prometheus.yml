@@ -1,5 +1,17 @@
-{% raw %}
+{%- from "etcd/map.jinja" import server with context %}
 server:
+  target:
+    static:
+      etcd:
+        endpoint:
+          {%- set hostname = grains.get('nodename') %}
+          {%- for member in server.members %}
+            {%- if member.name == hostname %}
+          - address: {{ member.host }}
+            port: {{ member.port }}
+            {%- endif %}
+          {%- endfor %}
+{% raw %}
   alert:
     EtcdFailedTotalIn5m:
       if: >-
