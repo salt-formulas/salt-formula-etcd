@@ -1,4 +1,22 @@
+{%- from "etcd/map.jinja" import server with context %}
+
 dashboard:
+{%- if server.monitoring is defined %}
+  {%- set backend = server.monitoring.get('backend') %}
+  {%- if backend is string %}
+    {%- set backend = [backend] %}
+  {%- endif %}
+{%- else %}
+{# legacy StackLight behavior #}
+{% set backend = ['influxdb'] %}
+{%- endif %}
+
+{%- if 'prometheus' in backend %}
+  etcd-cluster-prometheus:
+    format: json
+    template: etcd/files/grafana_dashboards/etcd_prometheus.json.json
+{%- endif %}
+{%- if 'influxdb' in backend %}
   etcd:
     format: json
     template: etcd/files/grafana_dashboards/etcd_influxdb.json
@@ -17,3 +35,4 @@ dashboard:
               cluster_status:
                 rawQuery: true
                 query: SELECT last(value) FROM cluster_status WHERE cluster_name = 'etcd' AND environment_label = '$environment' AND $timeFilter GROUP BY time($interval) fill(null)
+{%- endif %}
