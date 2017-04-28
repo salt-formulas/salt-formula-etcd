@@ -11,32 +11,36 @@ server:
             port: {{ member.port }}
             {%- endif %}
           {%- endfor %}
-{% raw %}
   alert:
     EtcdFailedTotalIn5m:
       if: >-
         sum by(method) (rate(etcd_http_failed_total{code!~"4[0-9]{2}"}[5m]))
-        / sum by(method) (rate(etcd_http_received_total[5m])) > 0.01
+        / sum by(method) (rate(etcd_http_received_total[5m])) > {{ prometheus_server.get('alert', {}).get('EtcdFailedTotalin5m', {}).get('var', {}).get('threshold', 0.01) }}
+      {% raw %}
       labels:
         severity: warning
         service: etcd
       annotations:
         summary: 'High number of HTTP requests are failing on etcd'
         description: '{{ $value }}% of requests for {{ $labels.method }} failed on etcd instance {{ $labels.instance }}'
+      {% endraw %}
     EtcdServerHasLeader:
       if: 'etcd_server_has_leader != 1'
+      {% raw %}
       labels:
         severity: warning
         service: etcd
       annotations:
         summary: 'Etcd instance lost leader'
         description: 'Etcd {{ $labels.instance }} lost his leader'
+      {% endraw %}
     EtcdClusterSmall:
       if: 'count(up{job="etcd"} == 0) > count(up{job="etcd"}) / 2 - 1'
+      {% raw %}
       labels:
         severity: warning
         service: etcd
       annotations:
         summary: 'Etcd cluster small'
         description: 'If one more etcd peer goes down the cluster will be unavailable'
-{% endraw %}
+      {% endraw %}
