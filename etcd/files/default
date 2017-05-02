@@ -11,7 +11,7 @@
 ## default: "off"
 ETCD_PROXY="on"
 
-ETCD_INITIAL_CLUSTER="{% for member in server.members %}{{ member.name }}={%- if server.bind.host == '127.0.0.1' %}http://127.0.0.1:2380{% else %}http://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+ETCD_INITIAL_CLUSTER="{% for member in server.members %}{{ member.name }}={%- if server.bind.host == '127.0.0.1' %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://127.0.0.1:2380{% else %}http{% if server.get('ssl', {}).get('enabled') %}s:{% endif %}//{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
 
 ##### -proxy-failure-wait
 ## Time (in milliseconds) an endpoint will be held in a failed state before being
@@ -93,7 +93,7 @@ ETCD_DATA_DIR="/var/lib/etcd/default"
 ## invalid example: "http://example.com:2380" (domain name is invalid for binding)
 ## default: "http://localhost:2380,http://localhost:7001"
 # ETCD_LISTEN_PEER_URLS="http://localhost:2380,http://localhost:7001"
-ETCD_LISTEN_PEER_URLS="http://{{ server.bind.host }}:2380"
+ETCD_LISTEN_PEER_URLS="http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ server.bind.host }}:2380"
 
 ##### -listen-client-urls
 ## List of URLs to listen on for client traffic. This flag tells the etcd to accept
@@ -108,7 +108,7 @@ ETCD_LISTEN_PEER_URLS="http://{{ server.bind.host }}:2380"
 ## invalid example: "http://example.com:2379" (domain name is invalid for binding)
 ## default: "http://localhost:2379,http://localhost:4001"
 # ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://localhost:4001"
-ETCD_LISTEN_CLIENT_URLS="{%- if server.bind.host != '127.0.0.1' %}http://{{ server.bind.host }}:4001,{% endif %}http://127.0.0.1:4001"
+ETCD_LISTEN_CLIENT_URLS="{%- if server.bind.host != '127.0.0.1' %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ server.bind.host }}:4001,{% endif %}http://127.0.0.1:4001"
 ##### -max-snapshots
 ## Maximum number of snapshot files to retain (0 is unlimited)
 ## default: 5
@@ -140,7 +140,7 @@ ETCD_LISTEN_CLIENT_URLS="{%- if server.bind.host != '127.0.0.1' %}http://{{ serv
 ## example: "http://example.com:2380, http://10.0.0.1:2380"
 ## default: "http://localhost:2380,http://localhost:7001"
 # ETCD_INITIAL_ADVERTISE_PEER_URLS="http://localhost:2380,http://localhost:7001"
-ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ server.bind.host }}:2380"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ server.bind.host }}:2380"
 
 ##### -initial-cluster
 ## initial cluster configuration for bootstrapping.
@@ -148,7 +148,7 @@ ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ server.bind.host }}:2380"
 ## The default uses `default` for the key because this is the default for the `-name` flag.
 ## default: "default=http://localhost:2380,default=http://localhost:7001"
 # ETCD_INITIAL_CLUSTER="default=http://localhost:2380,default=http://localhost:7001"
-ETCD_INITIAL_CLUSTER="{% for member in server.members %}{{ member.name }}={%- if server.bind.host == '127.0.0.1' %}http://127.0.0.1:2380{% else %}http://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+ETCD_INITIAL_CLUSTER="{% for member in server.members %}{{ member.name }}={%- if server.bind.host == '127.0.0.1' %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://127.0.0.1:2380{% else %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
 ##### -initial-cluster-state
 ## Initial cluster state ("new" or "existing"). Set to `new` for all members
 ## present during initial static or DNS bootstrapping. If this option is set to
@@ -156,7 +156,7 @@ ETCD_INITIAL_CLUSTER="{% for member in server.members %}{{ member.name }}={%- if
 ## value is set, etcd will attempt to start but fail safely.
 ## default: "new"
 # ETCD_INITIAL_CLUSTER_STATE="existing"
-ETCD_INITIAL_CLUSTER_STATE="new"
+ETCD_INITIAL_CLUSTER_STATE="{{ initial_cluster_state }}"
 
 ##### -initial-cluster-token
 ## Initial cluster token for the etcd cluster during bootstrap.
@@ -178,7 +178,7 @@ ETCD_INITIAL_CLUSTER_TOKEN="{{ server.token }}"
 ## (memory, file descriptors) are eventually depleted.
 ## default: "http://localhost:2379,http://localhost:4001"
 # ETCD_ADVERTISE_CLIENT_URLS="http://localhost:2379,http://localhost:4001"
-ETCD_ADVERTISE_CLIENT_URLS="http://{{ server.bind.host }}:4001"
+ETCD_ADVERTISE_CLIENT_URLS="http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ server.bind.host }}:4001"
 
 ##### -discovery
 ## Discovery URL used to bootstrap the cluster.
@@ -210,22 +210,34 @@ ETCD_ADVERTISE_CLIENT_URLS="http://{{ server.bind.host }}:4001"
 ##### -cert-file
 ## Path to the client server TLS cert file.
 ## default: none
-# ETCD_CERT_FILE=""
+# ETCD_CERT_FILE
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_CERT_FILE="/var/lib/etcd/etcd-server.crt"
+{%- endif %}
 
 ##### -key-file
 ## Path to the client server TLS key file.
 ## default: none
 # ETCD_KEY_FILE=""
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_KEY_FILE="/var/lib/etcd/etcd-server.key"
+{%- endif %}
 
 ##### -client-cert-auth
 ## Enable client cert authentication.
 ## default: false
 # ETCD_CLIENT_CERT_AUTH
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_CLIENT_CERT_AUTH=true
+{%- endif %}
 
 ##### -trusted-ca-file
 ## Path to the client server TLS trusted CA key file.
 ## default: none
 # ETCD_TRUSTED_CA_FILE
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_TRUSTED_CA_FILE="/var/lib/etcd/ca.pem"
+{%- endif %}
 
 ##### -peer-ca-file [DEPRECATED]
 ## Path to the peer server TLS CA file. `-peer-ca-file ca.crt` could be replaced
@@ -237,27 +249,38 @@ ETCD_ADVERTISE_CLIENT_URLS="http://{{ server.bind.host }}:4001"
 ## Path to the peer server TLS cert file.
 ## default: none
 # ETCD_PEER_CERT_FILE
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_PEER_CERT_FILE="/var/lib/etcd/etcd-server.crt"
+{%- endif %}
 
 ##### -peer-key-file
 ## Path to the peer server TLS key file.
 ## default: none
 # ETCD_PEER_KEY_FILE
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_PEER_KEY_FILE="/var/lib/etcd/etcd-server.key"
+{%- endif %}
 
 ##### -peer-client-cert-auth
 ## Enable peer client cert authentication.
 ## default: false
 # ETCD_PEER_CLIENT_CERT_AUTH
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_PEER_CLIENT_CERT_AUTH=true
+{%- endif %}
 
 ##### -peer-trusted-ca-file
 ## Path to the peer server TLS trusted CA file.
 ## default: none
 # ETCD_PEER_TRUSTED_CA_FILE
+{%- if server.get('ssl', {}).get('enabled') %}
+ETCD_PEER_TRUSTED_CA_FILE="/var/lib/etcd/ca.pem"
+{%- endif %}
 
 ### Logging Flags
 ##### -debug
 ## Drop the default log level to DEBUG for all subpackages.
 ## default: false (INFO for all packages)
-# ETCD_DEBUG
 
 ##### -log-package-levels
 ## Set individual etcd subpackages to specific log levels.

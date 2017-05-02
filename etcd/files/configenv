@@ -1,0 +1,8 @@
+{%- from "etcd/map.jinja" import server with context %}
+# this file can be sourced and used to configure etcdctl
+export ETCDCTL_ENDPOINT="{% for member in server.members %}http{% if server.get('ssl', {}).get('enabled') %}s{% endif %}://{{ member.host }}:4001{% if not loop.last %},{% endif %}{% endfor %}"
+{%- if server.get('ssl', {}).get('enabled') %}
+export ETCDCTL_CA_FILE=/var/lib/etcd/ca.pem
+export ETCDCTL_CERT_FILE=/var/lib/etcd/etcd-server.pem
+export ETCDCTL_KEY_FILE=/var/lib/etcd/etcd-server.key
+{% endif %}

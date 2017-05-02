@@ -1,0 +1,14 @@
+local_plugin:
+  collectd_http_check:
+    polling_interval: 30
+    url:
+      etcd:
+        expected_code: 200
+        expected_content: >-
+          {"health": "true"}
+        url: http://127.0.0.1:{{ pillar.etcd.server.bind.get('port', '4001') }}/health
+        metric_name: etcd_service_health
+  collectd_processes:
+    process:
+      etcd:
+        match: bin/etcd

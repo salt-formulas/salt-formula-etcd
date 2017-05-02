@@ -1,0 +1,45 @@
+metric_collector:
+  trigger:
+    etcd_local_endpoint:
+      description: 'Etcd server is locally down'
+      severity: down
+      rules:
+      - metric: etcd_service_health
+        field:
+          service: etcd
+        relational_operator: '=='
+        threshold: 0
+        window: 60
+        periods: 0
+        function: last
+  alarm:
+    etcd_endpoint:
+      alerting: enabled
+      triggers:
+      - etcd_local_endpoint
+      dimension:
+        service: etcd-endpoint
+
+aggregator:
+  alarm_cluster:
+    etcd_endpoint:
+      policy: availability_of_members
+      alerting: enabled
+      group_by: hostname
+      match:
+        service: etcd-endpoint
+      members:
+      - etcd_endpoint
+      dimension:
+        service: etcd
+        nagios_host: 01-service-clusters
+    etcd:
+      policy: highest_severity
+      alerting: enabled_with_notification
+      match:
+        service: etcd
+      members:
+      - etcd_endpoint
+      dimension:
+        cluster_name: etcd
+        nagios_host: 00-top-clusters
