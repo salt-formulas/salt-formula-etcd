@@ -98,6 +98,7 @@ Run etcd on k8s
     etcd:
       server:
         engine: kubernetes
+        image: etcd:latest
 
 Copy etcd binary from container
 ---------------
