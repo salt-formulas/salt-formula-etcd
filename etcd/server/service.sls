@@ -18,14 +18,36 @@ etcd_packages:
 
 {% elif server.get('source', {}).get('engine') == 'docker_hybrid' %}
 
+{%- if grains.os_family == 'RedHat' %}
+etcd_enable_epel:
+  pkg.installed:
+    - name: epel-release
+
+etcd_install_pip:
+  pkg.installed:
+    - name: python2-pip
+
+etcd_python_etcd_from_pip:
+  pip.installed:
+    - name: python-etcd
+
+{%- endif %}
+
+
+{%- set _support_pkgs = [] %}
+{%- for pkg in server.pkgs %}
+{%- do _support_pkgs.append(pkg) %}
+{%- endfor %}
+
+{%- if _support_pkgs|length > 1 %}
 etcd_support_packages:
   pkg.installed:
     - pkgs:
-{%- for pkg in server.pkgs %}
-{%- if pkg != 'etcd' %}
-      - {{ pkg }}
-{%- endif %}
+{%- for pkg in _support_pkgs %}
+    - {{ pkg }}
 {%- endfor %}
+
+{%- endif %}
 
 user_etcd:
   user.present:
