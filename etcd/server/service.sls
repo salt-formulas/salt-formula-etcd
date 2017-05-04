@@ -44,7 +44,7 @@ etcd_support_packages:
   pkg.installed:
     - pkgs:
 {%- for pkg in _support_pkgs %}
-    - {{ pkg }}
+      - {{ pkg }}
 {%- endfor %}
 
 {%- endif %}
