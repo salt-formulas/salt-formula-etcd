@@ -41,7 +41,7 @@ etcd_python_etcd_from_pip:
 {%- endif %}
 {%- endfor %}
 
-{%- if _support_pkgs|length > 1 %}
+{%- if _support_pkgs|length >= 1 %}
 etcd_support_packages:
   pkg.installed:
     - pkgs:
