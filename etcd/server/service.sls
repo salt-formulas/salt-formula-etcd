@@ -36,7 +36,9 @@ etcd_python_etcd_from_pip:
 
 {%- set _support_pkgs = [] %}
 {%- for pkg in server.pkgs %}
+{%- if pkg != 'etcd' %}
 {%- do _support_pkgs.append(pkg) %}
+{%- endif %}
 {%- endfor %}
 
 {%- if _support_pkgs|length > 1 %}
