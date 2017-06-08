@@ -152,9 +152,9 @@ etcd:
   service.running:
   - enable: True
   - name: {{ server.services }}
-  {% if grains.noservices is defined %}
-  - onlyif: {% if grains.get('noservices', "True") %}"True"{% else %}False{% endif %}
-  {% endif %}
+  {%- if grains.get('noservices') %}
+  - onlyif: /bin/false
+  {%- endif %}
 
 {%- endif %}
 
