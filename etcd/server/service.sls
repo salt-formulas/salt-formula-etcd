@@ -63,7 +63,7 @@ user_etcd:
 
 pull-etcd-image:
   dockerng.image_present:
-    - image: {{ server.get('image', 'quay.io/coreos/etcd:latest') }}
+    - name: {{ server.get('image', 'quay.io/coreos/etcd:latest') }}
 
 copy-etcd-binaries:
   dockerng.running:
