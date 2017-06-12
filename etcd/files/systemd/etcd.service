@@ -17,7 +17,7 @@ ExecStart=/usr/local/bin/etcd $DAEMON_ARGS
 Restart=on-abnormal
 #RestartSec=10s
 LimitNOFILE=65536
+TimeoutSec=120
 
 [Install]
 WantedBy=multi-user.target
-Alias=etcd2.service
