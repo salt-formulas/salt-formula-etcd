@@ -4,7 +4,7 @@ dashboard:
   etcd-cluster-prometheus:
     datasource: prometheus
     format: json
-    template: etcd/files/grafana_dashboards/etcd_prometheus.json.json
+    template: etcd/files/grafana_dashboards/etcd_prometheus.json
   etcd:
     datasource: influxdb
     format: json
