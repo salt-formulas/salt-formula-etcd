@@ -61,6 +61,10 @@ user_etcd:
       - user: root
       - group: root
 
+pull-etcd-image:
+  dockerng.image_present:
+    - image: {{ server.get('image', 'quay.io/coreos/etcd:latest') }}
+
 copy-etcd-binaries:
   dockerng.running:
     - image: {{ server.get('image', 'quay.io/coreos/etcd:latest') }}
@@ -71,6 +75,7 @@ copy-etcd-binaries:
     - force: True
     - require:
       - file: /tmp/etcd
+      - dockerng: pull-etcd-image
 
 {%- for filename in ['etcd', 'etcdctl'] %}
 
