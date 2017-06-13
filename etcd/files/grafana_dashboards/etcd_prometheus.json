@@ -1,3 +1,4 @@
+{%- raw %}
 {
   "annotations": {
     "list": []
@@ -793,3 +794,4 @@
   "title": "Etcd Cluster",
   "version": 0
 }
+{%- endraw %}
