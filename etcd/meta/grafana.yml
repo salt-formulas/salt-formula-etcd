@@ -10,6 +10,7 @@ dashboard:
     format: json
     template: etcd/files/grafana_dashboards/etcd_influxdb.json
   main:
+    datasource: influxdb
     row:
       etcd-control-plane:
         title: Etcd Cluster
