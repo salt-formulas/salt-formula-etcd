@@ -1,4 +1,4 @@
-{%- from "etcd/map.jinja" import server with context %}
+{%- from "etcd/map.jinja" import server, monitoring with context %}
 server:
   target:
     static:
@@ -13,9 +13,10 @@ server:
           {%- endfor %}
   alert:
     EtcdFailedTotalIn5m:
+      {%- set threshold = monitoring.failed_http_requests_percentage / 100.0 %}
       if: >-
         sum by(method) (rate(etcd_http_failed_total{code!~"4[0-9]{2}"}[5m]))
-        / sum by(method) (rate(etcd_http_received_total[5m])) > {{ prometheus_server.get('alert', {}).get('EtcdFailedTotalin5m', {}).get('var', {}).get('threshold', 0.01) }}
+        / sum by(method) (rate(etcd_http_received_total[5m])) > {{ threshold }}
       {% raw %}
       labels:
         severity: warning

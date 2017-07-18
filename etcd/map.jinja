@@ -18,3 +18,9 @@
         'services': ['etcd']
     },
 }, grain='oscodename', merge=salt['pillar.get']('etcd:server'))) %}
+
+{%- set monitoring = salt['grains.filter_by']({
+  'default': {
+    'failed_http_requests_percentage': 1,
+  },
+}, grain='os_family', merge=salt['pillar.get']('etcd:monitoring')) %}
