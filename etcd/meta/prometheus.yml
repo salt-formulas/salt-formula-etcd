@@ -3,6 +3,16 @@ server:
   target:
     static:
       etcd:
+        enabled: true
+        {%- if server.get('ssl', {}).get('enabled') %}
+        scheme: https
+        tls_config:
+          skip_verify: true
+          cert_name: prometheus-server.crt
+          key_name: prometheus-server.key
+        {%- else %}
+        scheme: http
+        {%- endif %}
         endpoint:
           {%- set hostname = grains.get('nodename') %}
           {%- for member in server.members %}
