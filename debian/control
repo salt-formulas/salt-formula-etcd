@@ -10,6 +10,6 @@ Vcs-Git: https://github.com/tcpcloud/salt-formula-etcd.git
 
 Package: salt-formula-etcd
 Architecture: all
-Depends: ${misc:Depends}, salt-master, reclass
+Depends: ${misc:Depends}
 Description: etcd salt formula
  Install and configure etcd system.
