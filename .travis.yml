@@ -17,12 +17,15 @@ install:
   - bundle install
 
 env:
-    - PLATFORM=trevorj/salty-whales:trusty SUITE=cluster
-    - PLATFORM=trevorj/salty-whales:xenial SUITE=cluster
-    - PLATFORM=trevorj/salty-whales:trusty SUITE=proxy
-    - PLATFORM=trevorj/salty-whales:xenial SUITE=proxy
-    - PLATFORM=trevorj/salty-whales:trusty SUITE=single
-    - PLATFORM=trevorj/salty-whales:xenial SUITE=single
+    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2016.3 SUITE=cluster
+    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2016.3 SUITE=proxy
+    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2016.3 SUITE=single
+    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2017.7 SUITE=cluster
+    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2017.7 SUITE=proxy
+    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-xenial-salt-2017.7 SUITE=single
+#    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-bionic-salt-2017.7 SUITE=cluster
+#    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-bionic-salt-2017.7 SUITE=proxy
+#    - PLATFORM=epcim/salt-formulas:saltstack-ubuntu-bionic-salt-2017.7 SUITE=single
 
 before_script:
   - set -o pipefail
