@@ -22,36 +22,58 @@ server:
             {%- endif %}
           {%- endfor %}
   alert:
-    EtcdFailedTotalIn5m:
-      {%- set threshold = monitoring.failed_http_requests_percentage / 100.0 %}
+    EtcdRequestFailureTooHigh:
+      {%- set failed_http_requests = monitoring.failed_http_requests_percentage / 100.0 %}
       if: >-
-        sum by(method) (rate(etcd_http_failed_total{code!~"4[0-9]{2}"}[5m]))
-        / sum by(method) (rate(etcd_http_received_total[5m])) > {{ threshold }}
-      {% raw %}
+        sum by(method) (rate(etcd_http_failed_total[5m]))
+        / sum by(method) (rate(etcd_http_received_total[5m])) > {{ failed_http_requests }}
+      {%- raw %}
       labels:
-        severity: warning
+        severity: minor
         service: etcd
       annotations:
-        summary: 'High number of HTTP requests are failing on etcd'
-        description: '{{ $value }}% of requests for {{ $labels.method }} failed on etcd instance {{ $labels.instance }}'
-      {% endraw %}
-    EtcdServerHasLeader:
-      if: 'etcd_server_has_leader != 1'
-      {% raw %}
+        summary: "High number of HTTP requests are failing on etcd"
+        description: "{{ $value }}% of requests for the {{ $labels.method }} method failed on the {{ $labels.instance }} etcd instance."
+      {%- endraw %}
+    EtcdInstanceNoLeader:
+      if: "etcd_server_has_leader != 1"
+      {%- raw %}
       labels:
-        severity: warning
+        severity: major
         service: etcd
       annotations:
-        summary: 'Etcd instance lost leader'
-        description: 'Etcd {{ $labels.instance }} lost his leader'
-      {% endraw %}
-    EtcdClusterSmall:
-      if: 'count(up{job="etcd"} == 0) > count(up{job="etcd"}) / 2 - 1'
-      {% raw %}
+        summary: "Etcd instance has no leader"
+        description: "The etcd {{ $labels.instance }} instance has no leader."
+      {%- endraw %}
+    EtcdServiceDownMinor:
+      if: "up{job='etcd'} == 0"
+      {%- raw %}
+      for: 2m
       labels:
-        severity: warning
+        severity: minor
         service: etcd
       annotations:
-        summary: 'Etcd cluster small'
-        description: 'If one more etcd peer goes down the cluster will be unavailable'
-      {% endraw %}
+        summary: "Etcd instance is down"
+        description: "The etcd {{ $labels.instance }} instance is down for at least 2 minutes."
+      {%- endraw %}
+    EtcdServiceDownMajor:
+      {%- set instances_major_threshold_percent = monitoring.instances_major_threshold_percent %}
+      if: "count(up{job='etcd'} == 0) > count(up{job='etcd'}) * {{ monitoring.instances_major_threshold_percent }}"
+      {%- raw %}
+      for: 2m
+      labels:
+        severity: major
+        service: etcd
+      annotations:
+        summary: "{{ instances_major_threshold_percent*100 }}% of etcd instances are down"
+        description: "{{ $value }}{%- endraw %} etcd instances are down (at least {{ instances_major_threshold_percent*100 }} for at least 2 minutes."
+    EtcdServiceOutage:
+      if: "count(up{job='etcd'} == 0) == count(up{job='etcd'})"
+      {%- raw %}
+      labels:
+        severity: critical
+        service: etcd
+      annotations:
+        summary: "Etcd service outage"
+        description: "All etcd services within the cluster are down."
+      {%- endraw %}
