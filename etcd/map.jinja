@@ -22,6 +22,6 @@
 {%- set monitoring = salt['grains.filter_by']({
   'default': {
     'failed_http_requests_percentage': 1,
-    'instances_major_threshold_percent': '0.3'
+    'instances_major_threshold_percent': 0.3
   },
 }, grain='os_family', merge=salt['pillar.get']('etcd:monitoring')) %}

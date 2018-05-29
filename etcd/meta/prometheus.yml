@@ -57,7 +57,7 @@ server:
         description: "The etcd {{ $labels.instance }} instance is down for at least 2 minutes."
       {%- endraw %}
     EtcdServiceDownMajor:
-      {%- set instances_major_threshold_percent = monitoring.instances_major_threshold_percent %}
+      {%- set instances_major_threshold_percent = monitoring.instances_major_threshold_percent|float %}
       if: "count(up{job='etcd'} == 0) > count(up{job='etcd'}) * {{ monitoring.instances_major_threshold_percent }}"
       {%- raw %}
       for: 2m
