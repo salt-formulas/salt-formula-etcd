@@ -1,0 +1,10 @@
+parameters:
+  linux:
+    system:
+      user:
+        etcd:
+          enabled: true
+          name: etcd
+          home: /var/lib/etcd
+          shell: /bin/false
+          system: True
