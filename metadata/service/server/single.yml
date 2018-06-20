@@ -2,6 +2,7 @@ applications:
 - etcd
 classes:
 - service.etcd.support
+- service.etcd.linux
 parameters:
   etcd:
     server:
