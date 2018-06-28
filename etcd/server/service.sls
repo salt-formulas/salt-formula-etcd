@@ -62,11 +62,19 @@ user_etcd:
       - group: root
 
 pull-etcd-image:
+  {%- if grains['saltversioninfo'] < [2017, 7] %}
   dockerng.image_present:
+  {%- else %}
+  docker_image.present:
+  {%- endif %}
     - name: {{ server.get('image', 'quay.io/coreos/etcd:latest') }}
 
 copy-etcd-binaries:
+  {%- if grains['saltversioninfo'] < [2017, 7] %}
   dockerng.running:
+  {%- else %}
+  docker_container.running:
+  {%- endif %}
     - image: {{ server.get('image', 'quay.io/coreos/etcd:latest') }}
     - entrypoint: cp
     - command: -vr /usr/local/bin/ /tmp/etcd/
@@ -75,7 +83,11 @@ copy-etcd-binaries:
     - force: True
     - require:
       - file: /tmp/etcd
+      {%- if grains['saltversioninfo'] < [2017, 7] %}
       - dockerng: pull-etcd-image
+      {%- else %}
+      - docker_image: pull-etcd-image
+      {%- endif %}
 
 {%- for filename in ['etcd', 'etcdctl'] %}
 
@@ -86,7 +98,11 @@ copy-etcd-binaries:
     - user: root
     - group: root
     - require:
+      {%- if grains['saltversioninfo'] < [2017, 7] %}
       - dockerng: copy-etcd-binaries
+      {%- else %}
+      - docker_container: copy-etcd-binaries
+      {%- endif %}
     - watch_in:
       - service: etcd
 
