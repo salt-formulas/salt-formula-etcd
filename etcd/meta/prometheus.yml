@@ -65,8 +65,8 @@ server:
         severity: major
         service: etcd
       annotations:
-        summary: "{{ instances_major_threshold_percent*100 }}% of etcd instances are down"
-        description: "{{ $value }}{%- endraw %} etcd instances (>= {{ instances_major_threshold_percent*100 }}) are down for 2 minutes."
+        summary: "{%- endraw %}{{ instances_major_threshold_percent*100 }}% of etcd instances are down"
+        description: "{%- raw %}{{ $value }}{%- endraw %} etcd instances (>= {{ instances_major_threshold_percent*100 }}%) are down for 2 minutes."
     EtcdServiceOutage:
       if: "count(up{job='etcd'} == 0) == count(up{job='etcd'})"
       {%- raw %}
